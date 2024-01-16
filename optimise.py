@@ -105,5 +105,5 @@ if __name__ == "__main__":
         print("[INPUT ERROR] This script requires two arguments:")
         print("   - The directory to write the output (should be submission_teamX) with X in {1...9}")
         print("   - An input dataset (e.g. ./data/tsp_51)")
-        print("Correct call format: $> python optimise.py submission_teamX ./data/tsp51")
+        print("Correct call format: $> python optimise.py submission_teamX ./data/tsp_51")
         print("")
