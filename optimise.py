@@ -1,84 +1,30 @@
+# ========================================================================================
+# ========================================================================================
+# ========================================================================================
+# ========================================================================================
+# ========================================================================================
+# ============                                                       =====================
+# ============                                                       =====================
+# ============                                                       =====================
+# ============       WARNING FOR SUBMISSIONS                         =====================
+# ============       Please modify only the code for the             =====================
+# ============       function "custom_heuristic"                     =====================
+# ============                                                       =====================
+# ============                                                       =====================
+# ============                                                       =====================
+# ========================================================================================
+# ========================================================================================
+# ========================================================================================
+# ========================================================================================
+# ========================================================================================
+
 from collections import namedtuple
 import math
 import random
 import sys
 from typing import List
+from tsp_utils import length, tour_cost, read_data, Point, write_solution
 
-Point = namedtuple("Point", ['x', 'y'])
-
-def length(point1: Point, point2: Point) -> float:
-    """
-    This function calculates the distance between points point1 and point2
-
-    param: point1: point 1
-    param: point2: point 2
-    
-    return: Euclidean distance between point1 and point2
-    """
-
-    return math.sqrt((point1.x - point2.x)**2 + (point1.y - point2.y)**2)
-
-def tour_cost(solution: List, points: List) -> float:
-    """
-    This function calculates the cost of a tour, this is the cost of visiting a set of
-    points in the given order
-
-    param: points: list of Point objects
-
-    return: cost of tour as sum of distances between consecutive points
-    """
-
-    # calculate the length of the tour
-    nodeCount = len(solution)
-    obj = length(points[solution[-1]], points[solution[0]])
-    for index in range(0, nodeCount-1):
-        obj += length(points[solution[index]], points[solution[index+1]])
-    
-    return obj
-
-def read_data(file_location: str) -> List:
-    """
-    This function reads the input data using the specified location
-
-    param: file_location: relative path where the input is stored
-    return: list of points
-    """
-    
-    input_data_file = open(file_location, 'r')
-    input_data = input_data_file.read()
-
-    # parse the input
-    lines = input_data.split('\n')
-    
-    # Read number of points
-    nodeCount = int(lines[0])
-    
-    # Ingest points
-    points = []
-    for i in range(1, nodeCount+1):
-        line = lines[i]
-        parts = line.split()
-        points.append(Point(float(parts[0]), float(parts[1])))
-
-    # Return
-    return points
-
-def trivial_solution(points: List) -> List:
-    """
-    This function builds a trivial solution for the points to visit
-
-    param: points: list of points to visit
-
-    return: trivial solution, initial sequence
-    """
-
-    # build a trivial solution
-    # visit the nodes in the order they appear in the file
-    nodeCount = len(points)
-    solution = range(0, nodeCount)
-
-    # Return
-    return solution
 
 def custom_heuristic(points: List) -> List:
     """
@@ -89,13 +35,13 @@ def custom_heuristic(points: List) -> List:
     return: solution: sequence of point visits
     """
 
-    #===============================================
-    #===============================================
-    #====                           ================
-    #====    YOUR CODE GOES HERE    ================
-    #====                           ================
-    #===============================================
-    #===============================================
+    # ===============================================
+    # ===============================================
+    # ====                           ================
+    # ====    YOUR CODE GOES HERE    ================
+    # ====                           ================
+    # ===============================================
+    # ===============================================
 
     # REPLACE THE TRIVIAL SOLUTION WITH YOUR HEURISTIC
     nodeCount = len(points)
@@ -103,18 +49,29 @@ def custom_heuristic(points: List) -> List:
 
     # Return
     return solution
-    
-    
-def solve_tsp(file_location):
+
+
+# ========================================================================================
+# =============                                                 ==========================
+# =============     PLEASE DO NOT MODIFY CODE BELOW THIS LINE   ==========================
+# =============                                                 ==========================
+# ========================================================================================
+
+def solve_tsp(input_file: str) -> List:
     """
+    [PLEASE DO NOT MODIFY THE CODE IN THIS FUNCTION]
+
+    This function runs the following steps
+    - Read data (using read_data function from tsp_utils)
+    - Runs custom heuristic as implemented by team 
+    - Evaluates and prints out the cost of the solution
 
     """
     # Read data
-    points = read_data(file_location)
+    points = read_data(input_file)
 
-    # Build solution using trivial solution
-    # Replace this function with a call to custom_heuristic once you have implemented your improved algorithm
-    solution = trivial_solution(points)
+    # Build solution using your custom heuristic
+    solution = custom_heuristic(points)
     
     # Calculate cost of solution
     total_cost = tour_cost(solution, points)
@@ -126,11 +83,27 @@ def solve_tsp(file_location):
     return solution
 
 
+# ================================
+# PLEASE DO NOT MODIFY THIS CODE
+# ================================
+if __name__ == "__main__":
+    if len(sys.argv) == 3:
+        # Output directory
+        output_directory = sys.argv[1].strip()
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        file_location = sys.argv[1].strip()
-        solve_tsp(file_location)
+        # Read input file
+        input_file = sys.argv[2].strip()
+
+        # Run optimisation
+        solution = solve_tsp(input_file)
+
+        # Write output
+        write_solution(output_directory, input_file, solution)
+
     else:
-        print('This test requires an input file.  Please select one from the data directory. (i.e. python solver.py ./data/tsp_51)')
-
+        print("")
+        print("[INPUT ERROR] This script requires two arguments:")
+        print("   - The directory to write the output (should be submission_teamX) with X in {1...9}")
+        print("   - An input dataset (e.g. ./data/tsp_51)")
+        print("Correct call format: $> python optimise.py submission_teamX ./data/tsp51")
+        print("")
