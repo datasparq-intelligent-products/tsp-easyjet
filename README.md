@@ -42,6 +42,9 @@ Any submission with another name will not be evaluated. Note that by running
 
 you can generate the sequence for `tsp_51` in your corresponding folder. 
 
+### On Databricks
+Run the notebook `RUN_optimise_evaluate` and check the logs generated on your team folder.
+
 ## Evaluation
 
 You can test your code and evaluate your submissions using this call:
@@ -49,6 +52,9 @@ You can test your code and evaluate your submissions using this call:
 `python evaluate submission_teamX`
 
 The **total cost** for each sequence is what we will use for the final classification.
+
+### On Databricks
+Run the notebook `RUN_optimise_evaluate` and check the logs generated on your team folder.
 
 ---
 #### ABOUT THIS CODE
