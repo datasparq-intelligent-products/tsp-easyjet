@@ -36,17 +36,15 @@ We will evaluate one submission per problem per team with the following names:
 - `tsp_1889 -> sequence_tsp_1889`
 - `tsp_33810 -> sequence_tsp_33810`
 
-Any submission with another name will not be evaluated. Note that by running
+Any submission with another name will not be evaluated. Note that by running the notebook
 
-`python optimise.py submission_teamX data/tsp_51`
+`run_evaluate_optimiser`
 
-you can generate the sequence for `tsp_51` in your corresponding folder. 
+ and changing the variables to your team, you can generate the sequence for either `tsp_51`, `tsp_1889` or `tsp_33810` in your corresponding folder. 
 
 ## Evaluation
 
-You can test your code and evaluate your submissions using this call:
-
-`python evaluate submission_teamX`
+Your evaluation for your code will be displayed at the end of the notebook named `run_evaluate_optimiser`.
 
 The **total cost** for each sequence is what we will use for the final classification.
 

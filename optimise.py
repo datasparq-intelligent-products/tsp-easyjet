@@ -86,6 +86,29 @@ def solve_tsp(input_file: str) -> List:
 # ================================
 # PLEASE DO NOT MODIFY THIS CODE
 # ================================
+
+def run_optimiser(output_directory: str,
+                  input_file: str) -> None:
+    
+    """
+    Function 'run_optimiser' runs through all steps requires through all required steps needed in optimise.py
+    :param output_directory: team output directory
+    :input_file: problem to optimise
+    """
+    input_file = "data/" + input_file
+    if len(output_directory) != 16 or output_directory[:15]!='submission_team' or int(output_directory[15:]) not in range(1, 10):
+        print("   - The directory of the submissions to evaluate (should be submission_teamX) with X in {1...9}")
+        return None
+    
+    if input_file not in ["data/tsp_51", "data/tsp_1889", "data/tsp_33810"]:
+        print(" - Input dataset (e.g. tsp_51) doesn't exist. Please check file name")
+        return None
+
+    solution = solve_tsp(input_file)
+
+    write_solution(output_directory, input_file, solution)
+
+
 if __name__ == "__main__":
     if len(sys.argv) == 3:
         # Output directory
