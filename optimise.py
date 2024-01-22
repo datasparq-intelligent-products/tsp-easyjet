@@ -35,20 +35,49 @@ def custom_heuristic(points: List) -> List:
     return: solution: sequence of point visits
     """
 
-    # ===============================================
-    # ===============================================
-    # ====                           ================
-    # ====    YOUR CODE GOES HERE    ================
-    # ====                           ================
-    # ===============================================
-    # ===============================================
+
+    def find_nearest_city(current_city, points, visited):
+        nearest_city = None
+        min_distance = float('inf')
+        for city in range(len(points)):
+            if city not in visited:
+                distance = length(points[current_city], points[city])
+                if distance < min_distance:
+                    min_distance = distance
+                    nearest_city = city
+        return nearest_city
+
+
+    num_cities = len(points)
+    visited = set()
+    current_city = 0
+    visited.add(current_city)
+    solution = [current_city]
+
+    while len(visited) < num_cities:
+        next_city = find_nearest_city(current_city, points, visited)
+        if next_city is not None:
+            solution.append(next_city)
+            visited.add(next_city)
+            current_city = next_city
+
+
+    #print("test - this is the solution", solution)
+
+
+    for i in solution:
+        print(length)
+
+    return solution
+
+
 
     # REPLACE THE TRIVIAL SOLUTION WITH YOUR HEURISTIC
-    nodeCount = len(points)
-    solution = range(0, nodeCount)
+    #nodeCount = len(points)
+    #solution = range(0, nodeCount)
 
     # Return
-    return solution
+    #return solution
 
 
 # ========================================================================================
