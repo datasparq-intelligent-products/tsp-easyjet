@@ -27,6 +27,36 @@ from tsp_utils import length, tour_cost, read_data, Point, write_solution
 from scipy.spatial import KDTree
 import numpy as np
 
+def greedy_solution(points:List, nodeCount:int) -> List:
+    # select closes 10 points
+    init_point = 0
+
+    tree = KDTree(points)
+    current_loc = init_point
+    solution = [init_point]
+    points_remaining = set(range(nodeCount))
+    points_remaining.remove(init_point)
+
+    for z in range(nodeCount - 1):
+        _, i_next = tree.query(points[current_loc], k=11)
+        # Remove already taken points
+        i_next = [i for i in i_next if i in points_remaining]
+        if i_next:
+            # calc dist. to 10 nearest points
+            distances = [length(points[current_loc], points[i]) for i in i_next]
+
+            distances[0] = 1000000000
+            # min distance index
+            min_idx = i_next[np.argmin(distances)]
+        else:
+            min_idx = random.sample(points_remaining, 1)[0]
+
+        solution.append(min_idx)
+        points_remaining.remove(min_idx)
+        current_loc = min_idx
+
+    return solution
+
 def custom_heuristic(points: List) -> List:
     """
     This function is the core function to implement
@@ -49,34 +79,10 @@ def custom_heuristic(points: List) -> List:
     # solution = range(0, nodeCount)
 
     # initial solution
-    # select closes 10 points
-    init_point = 0
-
-    tree = KDTree(points)
-    current_loc = init_point
-    solution = [init_point]
-    points_remaining = set(range(nodeCount))
-    points_remaining.remove(init_point)
-
-    for z in range(nodeCount-1):        
-        _, i_next = tree.query(points[current_loc], k=11)
-        # Remove already taken points
-        i_next = [i for i in i_next if i in points_remaining]
-        if i_next:
-            # calc dist. to 10 nearest points
-            distances = [length(points[current_loc], points[i]) for i in i_next]
-            
-            distances[0] = 1000000000
-            #min distance index
-            min_idx = i_next[np.argmin(distances)]
-        else:
-            min_idx = random.sample(points_remaining, 1)[0]
-        
-        solution.append(min_idx)
-        points_remaining.remove(min_idx)
-        current_loc = min_idx
+    init_soln = greedy_solution(points, nodeCount)
 
     # Return
+    solution = init_soln
     return solution
 
 
