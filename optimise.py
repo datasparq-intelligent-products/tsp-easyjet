@@ -24,6 +24,8 @@ import random
 import sys
 from typing import List
 from tsp_utils import length, tour_cost, read_data, Point, write_solution
+from scipy.spatial import distance_matrix
+import pandas as pd
 
 
 def custom_heuristic(points: List) -> List:
@@ -45,7 +47,47 @@ def custom_heuristic(points: List) -> List:
 
     # REPLACE THE TRIVIAL SOLUTION WITH YOUR HEURISTIC
     nodeCount = len(points)
-    solution = range(0, nodeCount)
+
+    # Calculate distance matrix
+    distance_matrix_df = pd.DataFrame(columns=['x', 'y'])
+    for i, point in enumerate(points):
+        distance_matrix_df.loc[i] = point.x, point.y
+
+    distances = pd.DataFrame(distance_matrix(distance_matrix_df.values, distance_matrix_df.values), index=distance_matrix_df.index, columns=distance_matrix_df.index)
+
+    # Initial greedy solution
+    solution = []
+    start_point = random.randint(0, nodeCount)
+    solution.append(start_point)
+    for i in range(nodeCount - 1):
+        min_distance_index = distances[[x for x in list(distances) if x not in solution]].loc[solution[-1]].idxmin()
+        solution.append(min_distance_index)
+
+    best_solution = solution
+    best_solution_cost = tour_cost(solution, points)
+
+    # Large swaps
+    for i in range(50):
+        
+        num_points = random.randint(1, int(nodeCount/5))
+        b = random.randint(num_points, int(nodeCount/2))
+        a = b-num_points
+        c = random.randint(int(nodeCount/2), nodeCount-num_points)
+        d = c + num_points
+    
+        solution[a:b], solution[c:d] = solution[c:d], solution[a:b]
+
+        solution_cost = tour_cost(solution, points)
+
+        if solution_cost < best_solution_cost:
+            best_solution = solution
+            best_solution_cost = solution_cost
+    
+
+    # solution = list(solution)
+    # random.shuffle(solution)
+    # solution[1], solution[0] = solution[0], solution[1]
+    # solution[21], solution[50] = solution[50], solution[21]
 
     # Return
     return solution
