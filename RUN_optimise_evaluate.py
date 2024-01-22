@@ -6,7 +6,7 @@ import os
 #====================================================
 # SET YOUR TEAM NUMBER AND RUN THE OPTIMISATION
 #====================================================
-TEAM_NUMBER = 0
+TEAM_NUMBER = 7
 
 """
 Script optimise.py requires two arguments:
