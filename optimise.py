@@ -24,7 +24,8 @@ import random
 import sys
 from typing import List
 from tsp_utils import length, tour_cost, read_data, Point, write_solution
-from scipy import   
+from scipy.spatial import KDTree
+import numpy as np
 
 def custom_heuristic(points: List) -> List:
     """
@@ -45,20 +46,35 @@ def custom_heuristic(points: List) -> List:
 
     # REPLACE THE TRIVIAL SOLUTION WITH YOUR HEURISTIC
     nodeCount = len(points)
-    solution = range(0, nodeCount)
+    # solution = range(0, nodeCount)
 
     # initial solution
     # select closes 10 points
     init_point = 0
 
-    from scipy.spatial import KDTree
     tree = KDTree(points)
     current_loc = init_point
-    for z in range(len(points)-1):        
-        _, i_next = tree.query([current_loc], k=11)
-        # calc dist. to 10 nearest points
-        distances = [for i in length(current_loc)]
-        print(dd, ii, sep='\n')
+    solution = [init_point]
+    points_remaining = set(range(nodeCount))
+    points_remaining.remove(init_point)
+
+    for z in range(nodeCount-1):        
+        _, i_next = tree.query(points[current_loc], k=11)
+        # Remove already taken points
+        i_next = [i for i in i_next if i in points_remaining]
+        if i_next:
+            # calc dist. to 10 nearest points
+            distances = [length(points[current_loc], points[i]) for i in i_next]
+            
+            distances[0] = 1000000000
+            #min distance index
+            min_idx = i_next[np.argmin(distances)]
+        else:
+            min_idx = random.sample(points_remaining, 1)[0]
+        
+        solution.append(min_idx)
+        points_remaining.remove(min_idx)
+        current_loc = min_idx
 
     # Return
     return solution
