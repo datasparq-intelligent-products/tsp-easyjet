@@ -44,11 +44,13 @@ if __name__ == "__main__":
                 # Evaluate submission
                 points = read_data("data/" + problem)
                 total_cost = tour_cost(solution, points)
+                assert(len(set(solution)) == len(solution))
                 print(f"Total cost for {problem}: %.4e" % total_cost)
                 
-            except:
+            except FileNotFoundError:
                 print(f"No data for {team_directory}/sequence_{problem}")
-
+            except AssertionError:
+                print(f"Invalid solution: check that each location appears once and only once")
         
     else:
         print("")
