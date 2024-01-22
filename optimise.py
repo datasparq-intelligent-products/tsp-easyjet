@@ -24,7 +24,7 @@ import random
 import sys
 from typing import List
 from tsp_utils import length, tour_cost, read_data, Point, write_solution
-
+from scipy import   
 
 def custom_heuristic(points: List) -> List:
     """
@@ -46,6 +46,19 @@ def custom_heuristic(points: List) -> List:
     # REPLACE THE TRIVIAL SOLUTION WITH YOUR HEURISTIC
     nodeCount = len(points)
     solution = range(0, nodeCount)
+
+    # initial solution
+    # select closes 10 points
+    init_point = 0
+
+    from scipy.spatial import KDTree
+    tree = KDTree(points)
+    current_loc = init_point
+    for z in range(len(points)-1):        
+        _, i_next = tree.query([current_loc], k=11)
+        # calc dist. to 10 nearest points
+        distances = [for i in length(current_loc)]
+        print(dd, ii, sep='\n')
 
     # Return
     return solution
