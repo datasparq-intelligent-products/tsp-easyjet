@@ -27,9 +27,20 @@ from tsp_utils import length, tour_cost, read_data, Point, write_solution
 from scipy.spatial import KDTree
 import numpy as np
 
+def get_radius(points):
+    min_x_coord = min(points, key=itemgetter(0))[0]
+    min_y_coord = min(points, key=itemgetter(1))[1]
+    max_x_coord = max(points, key=itemgetter(0))[0]
+    max_y_coord = max(points, key=itemgetter(1))[1]
+    radius = length(
+        Point(min_x_coord,min_y_coord),
+        Point(max_x_coord,max_y_coord)
+    )/2
+    return radius
+
 def greedy_solution(points:List, nodeCount:int) -> List:
     # select closes 10 points
-    init_point = 0
+    init_point = 42
 
     tree = KDTree(points)
     current_loc = init_point
@@ -38,7 +49,7 @@ def greedy_solution(points:List, nodeCount:int) -> List:
     points_remaining.remove(init_point)
 
     for z in range(nodeCount - 1):
-        _, i_next = tree.query(points[current_loc], k=11)
+        _, i_next = tree.query(points[current_loc], k=50)
         # Remove already taken points
         i_next = [i for i in i_next if i in points_remaining]
         if i_next:
@@ -56,6 +67,13 @@ def greedy_solution(points:List, nodeCount:int) -> List:
         current_loc = min_idx
 
     return solution
+
+def cluster_points(points):
+    cluster_thresh = get_radius*0.1
+    min_points = len(points)*0.1
+    clustering = DBSCAN(eps = cluster_thresh, min_samples = min_points)
+    clustering.fit(X)
+    return clustering.labels_
 
 def custom_heuristic(points: List) -> List:
     """
@@ -81,9 +99,11 @@ def custom_heuristic(points: List) -> List:
     # initial solution
     init_soln = greedy_solution(points, nodeCount)
 
+
     # Return
     solution = init_soln
     return solution
+
 
 
 # ========================================================================================
