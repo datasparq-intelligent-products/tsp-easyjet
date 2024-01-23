@@ -1,0 +1,7 @@
+/Workspace/Repos/Matthew.Carr@easyjet.com/tsp-easyjet/optimise.py:63: DeprecationWarning: Sampling from a set deprecated
+since Python 3.9 and will be removed in a subsequent version.
+  min_idx = random.sample(points_remaining, 1)[0]
+Total cost: 824.55
+
+Sequence 
+42 29 21 43 50 38 44 16 15 18 11 37 25 1 6 36 41 34 23 12 24 46 8 3 45 28 9 27 26 33 22 48 49 17 0 32 5 47 20 31 30 40 7 35 13 19 14 4 2 39 10
