@@ -26,6 +26,7 @@ from typing import List
 from tsp_utils import length, tour_cost, read_data, Point, write_solution
 from scipy.spatial import KDTree
 import numpy as np
+from copy import deepcopy as dc
 
 def greedy_solution(points:List, nodeCount:int) -> List:
     # select closes 10 points
@@ -57,6 +58,14 @@ def greedy_solution(points:List, nodeCount:int) -> List:
 
     return solution
 
+def calc_dists(solution, points):
+    nodeCount = len(solution)
+    dist_list = [length(points[solution[-1]], points[solution[0]])]
+    for index in range(0, nodeCount):
+        dist_list.append(length(points[solution[index]], points[solution[index+1]]))
+
+    return dist_list
+
 def custom_heuristic(points: List) -> List:
     """
     This function is the core function to implement
@@ -76,14 +85,41 @@ def custom_heuristic(points: List) -> List:
 
     # REPLACE THE TRIVIAL SOLUTION WITH YOUR HEURISTIC
     nodeCount = len(points)
-    # solution = range(0, nodeCount)
+    list_index = list(np.arange(0, nodeCount+1))
 
     # initial solution
     init_soln = greedy_solution(points, nodeCount)
 
-    # Return
-    solution = init_soln
-    return solution
+    #Best solution
+    best_solution = dc(init_soln)
+    best_tour_cost = tour_cost(init_soln, points)
+
+    # Cluster into subproblems
+    cluster_dict = {c: list_index[c*20:(c*20)+20] for c in range(int(nodeCount/20)+1)}
+    # print(cluster_dict)
+
+    for iter in range(10):
+        # len current solution
+        travel_dists = calc_dists(best_solution, points)
+
+        # Remove insert heuristics
+        # select random cluster
+        clust = random.sample(cluster_dict.keys(), 1)[0]
+
+        # Distances to arrive at nodes in our cluster
+        dist_for_nodes_in_clust = {i: travel_dists[i] for i in cluster_dict[clust]}
+        node_in_clust_max_dist_to = max(dist_for_nodes_in_clust, key=dist_for_nodes_in_clust.get)
+
+        for clust_node in cluster_dict[clust]:
+            solution_tmp = dc(best_solution)
+            solution_tmp = [n for n in solution_tmp if n != clust_node]
+            solution_tmp = solution_tmp[:node_in_clust_max_dist_to] + [clust_node] + solution_tmp[node_in_clust_max_dist_to:]
+            len_solution_tmp = tour_cost(solution_tmp, points)
+            if len_solution_tmp < best_tour_cost:
+                best_solution = solution_tmp
+
+
+    return best_solution
 
 
 # ========================================================================================
